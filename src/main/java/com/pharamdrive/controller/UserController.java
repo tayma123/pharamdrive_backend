@@ -25,6 +25,9 @@ public class UserController {
 		
 		return userRep.save(user);
 	}
+	
+	
+	
 	@GetMapping("/users")
 	public List<Users> getAllEmployees() {
 		return userRep.findAll();

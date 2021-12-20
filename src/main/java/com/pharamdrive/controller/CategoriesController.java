@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,9 +23,9 @@ import com.pharamdrive.repository.CategoriesRepository;
 public class CategoriesController {
 	@Autowired
 	public CategoriesRepository catRepo;
-	@PostMapping(value="/add/categorie")//,@PathParam(value="name") String name
+	@PostMapping(value="/add/categorie")
 	
-	public String  addNewCategorie(@RequestPart("file") MultipartFile file) {
+	public String  addNewCategorie(@RequestPart("file") MultipartFile file,@RequestParam String name) {
 		Random rand = new Random();
 		Categories categorie = new Categories();
 		String fileName = rand+file.getOriginalFilename();
@@ -41,7 +40,7 @@ public class CategoriesController {
 			e.printStackTrace();
 		}
 		categorie.setFile(fileName);
-		categorie.setCategory("namecat");
+		categorie.setCategory(name);
 		catRepo.save(categorie);
 		return "nouvelle categorie a ete ajoutee";
 		

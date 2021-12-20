@@ -8,4 +8,6 @@ import com.pharamdrive.models.Users;
 
 public interface UserRepository extends MongoRepository<Users,String>{
 
+	Users findByEmailAndPassword(String email, String password);
+
 }
