@@ -34,9 +34,7 @@ public class MedicamentsContoller {
 	@Autowired
 	public MedicamentsRepository MedicamentsRepo;
 	@PostMapping(value="/add/medicament")
-	public Medicaments addMEdicaments(@RequestParam String medicament,
-		@RequestParam String prix,@RequestParam String remise,@RequestParam String quantite,@RequestParam String pharmacie
-		,@RequestParam String categorie) {
+	public Medicaments addMEdicaments(@RequestBody Medicaments med) {
 		
 		
 		Random rand = new Random();
@@ -52,13 +50,8 @@ public class MedicamentsContoller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		medic.setMedicament(medicament);
-		medic.setPrix(prix);
-		medic.setRemise(remise);
-		medic.setQuantite(quantite);
-		medic.setPharmacie(pharmacie);
-		medic.setCategorie(categorie);
-		return MedicamentsRepo.save(medic);
+
+		return MedicamentsRepo.save(med);
 	}
 	@GetMapping("/medicaments")
 	public List<Medicaments> getAllMedicaments() {

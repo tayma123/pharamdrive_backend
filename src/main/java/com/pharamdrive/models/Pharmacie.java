@@ -23,6 +23,7 @@ public class Pharmacie {
 	private String email;
 	private String phone;
 	private String password;
+	private boolean verified ;
 	
 
 }
