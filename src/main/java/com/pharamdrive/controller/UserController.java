@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pharamdrive.models.Pharmacie;
 import com.pharamdrive.models.Users;
 import com.pharamdrive.repository.UserRepository;
 
@@ -20,11 +21,20 @@ import com.pharamdrive.repository.UserRepository;
 public class UserController {
 	@Autowired
 	public UserRepository userRep;
+	
 	@PostMapping(value="/user")
 	public Users register(@RequestBody Users user) {
 		
 		return userRep.save(user);
 	}
+	
+	//api to login in pharmadrive mobile
+	@PostMapping("/loginuser")
+    public Users loginuser(@RequestBody Users user){
+
+        Users OldUser = userRep.findByEmailAndPassword(user.getEmail(),user.getPassword());
+        return  OldUser;
+    }
 	
 	
 	

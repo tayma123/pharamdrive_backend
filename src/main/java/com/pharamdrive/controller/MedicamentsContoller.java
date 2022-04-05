@@ -24,6 +24,7 @@ import com.pharamdrive.models.Categories;
 import com.pharamdrive.models.Medicaments;
 import com.pharamdrive.models.Users;
 import com.pharamdrive.repository.MedicamentsRepository;
+import com.pharamdrive.repository.PharmacieRepository;
 import com.pharamdrive.repository.UserRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -33,12 +34,14 @@ import com.pharamdrive.repository.UserRepository;
 public class MedicamentsContoller {
 	@Autowired
 	public MedicamentsRepository MedicamentsRepo;
+	@Autowired
+	public PharmacieRepository pharmRepo;
 	@PostMapping(value="/add/medicament")
-	public Medicaments addMEdicaments(@RequestBody Medicaments med) {
+	public String addMEdicaments(@RequestBody Medicaments med) {
 		
 		
-		Random rand = new Random();
-		Medicaments medic = new Medicaments();
+		//Random rand = new Random();
+		//Medicaments medic = new Medicaments();
 		/*String fileName = file.getOriginalFilename();
 		
 		try {
@@ -50,18 +53,27 @@ public class MedicamentsContoller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-
-		return MedicamentsRepo.save(med);
+		
+		Medicaments medicament= MedicamentsRepo.save(med);
+		
+		
+		return "medicaments added successfully";
 	}
+	//get medicaments for a specific pharmacy
+	@GetMapping("/medicaments/pharmacy/{id}")
+	public List<Medicaments> getAllMedicamentPharmacys(@PathVariable String id) {
+	 return MedicamentsRepo.findAllById_pharmacie(id);
+	}
+	//get all medicaments 
 	@GetMapping("/medicaments")
 	public List<Medicaments> getAllMedicaments() {
 		return MedicamentsRepo.findAll();
 	}
+	
 	//Api Delete medicament
 	@DeleteMapping(value="/delete/medicament/{id}")
 	public String deleteMedicament(@PathVariable(value = "id") String id  ) {
 		MedicamentsRepo.deleteById(id);
-		
 		return "le medicament a été effacée avec succes";
 	}
 }

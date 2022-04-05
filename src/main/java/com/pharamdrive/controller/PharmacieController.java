@@ -30,7 +30,7 @@ public class PharmacieController {
 	}
 	
 	 @PostMapping("/login")
-	    public Pharmacie Register1 (@RequestBody Pharmacie pharmacie){
+	    public Pharmacie login(@RequestBody Pharmacie pharmacie){
 
 	        Pharmacie OldUser = pharmRepo.findByEmailAndPassword(pharmacie.getEmail(),pharmacie.getPassword());
 	        return  OldUser;
@@ -44,6 +44,6 @@ public class PharmacieController {
 	@PostMapping(value ="/pharmacie/{id}")
 	public Optional<Pharmacie> getPharmacieId(@PathVariable  String id ){
 		return  pharmRepo.findById(id); 
-		
+
 	}
 }

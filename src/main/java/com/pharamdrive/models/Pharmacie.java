@@ -1,5 +1,9 @@
 package com.pharamdrive.models;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,15 +19,21 @@ import lombok.ToString;
 
 
 @Document(collection="pharmacie")
-public class Pharmacie {
+public class Pharmacie implements Serializable{
 	@Id 
 	private String id_pharmacie;
 	private String name;
 	private String representant;
 	private String email;
 	private String phone;
+	private String adresse;
 	private String password;
+	private Date heures_ouverture;
+	private Date heures_fermeture;
+	
 	private boolean verified ;
+	
+	
 	
 
 }

@@ -1,5 +1,7 @@
 package com.pharamdrive.models;
 
+import java.io.Serializable;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 
 @Document(collection="medicaments")
-public class Medicaments {
+public class Medicaments implements Serializable{
 	
 	@Id
 	private String id_medicament;
@@ -21,7 +23,7 @@ public class Medicaments {
 	private String remise;
 	private String image="assets/icons/bio.png";
 	private String quantite;
-	private String pharmacie;
-	private String categorie;
+	private String id_pharmacie;
+	private String  id_categorie;
 
 }
