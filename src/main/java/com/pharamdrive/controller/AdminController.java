@@ -19,6 +19,7 @@ import com.pharamdrive.repository.AdminRepository;
 @RestController
 @RequestMapping("/v1")
 public class AdminController {
+	// add and login as super admin
 	@Autowired 
 	public AdminRepository adminRepo;
 	@PostMapping(value="/new/admin")
