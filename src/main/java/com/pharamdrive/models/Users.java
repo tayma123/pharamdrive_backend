@@ -29,6 +29,10 @@ public class Users implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	private String id_user;
+	private String name;
+	private String date_of_birth;
+	private String address;
+	private String phone;
 	private String role;
 	private String email;
 	private String password;

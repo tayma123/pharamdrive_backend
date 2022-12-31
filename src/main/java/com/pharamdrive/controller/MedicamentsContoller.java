@@ -3,6 +3,7 @@ package com.pharamdrive.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import javax.websocket.server.PathParam;
@@ -69,7 +70,12 @@ public class MedicamentsContoller {
 	public List<Medicaments> getAllMedicaments() {
 		return MedicamentsRepo.findAll();
 	}
-	
+	//Api get medicament
+	@GetMapping(value="/medicament/{id}")
+		public Optional<Medicaments> getMedicament(@PathVariable(value = "id") String id  ) {
+			
+			return MedicamentsRepo.findById(id);
+		}
 	//Api Delete medicament
 	@DeleteMapping(value="/delete/medicament/{id}")
 	public String deleteMedicament(@PathVariable(value = "id") String id  ) {
