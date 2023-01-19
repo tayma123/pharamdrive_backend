@@ -33,6 +33,9 @@ public class AdminController {
 	        Admin OldUser = adminRepo.findByEmailAndPassword(admin.getEmail(),admin.getPassword());
 	        return  OldUser;
 	    }
-	
+	@GetMapping("/all")
+	public List<Admin> hgetAll(){
+		return adminRepo.findAll();
+	}
 	
 }
