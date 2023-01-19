@@ -43,6 +43,7 @@
 	</dependencies>
 
 	<build>
+		<directory>/home/blockchain_team3/Nouveau</directory>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
