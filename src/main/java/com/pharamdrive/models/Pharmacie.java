@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -30,8 +31,18 @@ public class Pharmacie implements Serializable{
 	private String password;
 	private Date heures_ouverture;
 	private Date heures_fermeture;
-	
+	private String rue;
+	private Double altitude;
+	private Double longitude;
+	private String telephone;
+	private Point location;
+
+
+
+
 	private boolean verified ;
+	
+
 	
 	
 	
