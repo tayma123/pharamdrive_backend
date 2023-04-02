@@ -10,7 +10,6 @@ import com.pharamdrive.models.Medicament;
 
 
 public interface MedicamentsRepository  extends MongoRepository<Medicament,String>{
-	@Query("{ 'id_pharmacie' : ?0 }")
 	List<Medicament> findAllByIdPharmacie(String idPharmacie);
 	Optional<Medicament> findByIdPharmacieAndNomMedicament(String idPharmacie, String nomMedicament);
 
