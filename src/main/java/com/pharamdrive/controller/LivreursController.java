@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pharamdrive.models.Livreurs;
-import com.pharamdrive.models.Medicaments;
 import com.pharamdrive.repository.LivreursRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

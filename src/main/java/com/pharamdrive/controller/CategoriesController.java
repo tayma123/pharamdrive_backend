@@ -3,9 +3,6 @@ package com.pharamdrive.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
-
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.pharamdrive.models.Categories;
-import com.pharamdrive.models.Medicaments;
 import com.pharamdrive.repository.CategoriesRepository;
 import com.pharamdrive.repository.PharmacieRepository;
 

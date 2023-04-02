@@ -18,7 +18,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 
-
 @Document(collection="pharmacie")
 public class Pharmacie implements Serializable{
 	@Id 

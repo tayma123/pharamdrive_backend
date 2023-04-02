@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 
 
 @Document(collection="medicaments")
-public class Medicaments implements Serializable{
+public class Medicament implements Serializable{
 	
 	@Id
 	private String id_medicament;
-	private String medicament;
-	private String prix;
+	private String nomMedicament;
+	private double prix;
 	private String remise;
 	private String image="assets/icons/bio.png";
 	private String quantite;
-	private String id_pharmacie;
-	private String  id_categorie;
+	private String idPharmacie;
+	private String  idCategorie;
 
 }

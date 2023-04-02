@@ -1,10 +1,14 @@
 package com.pharamdrive.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.websocket.server.PathParam;
 
+import com.pharamdrive.RessourcesDto.MedicmentAvecBasPrixDto;
+import com.pharamdrive.models.Medicament;
+import com.pharamdrive.repository.MedicamentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
@@ -33,6 +37,8 @@ public class PharmacieController {
 	public PharmacieRepository pharmRepo;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	MedicamentsRepository medicamentsRepository;
 	@PostMapping(value="/new/pharmacie")
 	public Pharmacie addPharmacie(@RequestBody Pharmacie pharam) {
 		return pharmRepo.save(pharam);
@@ -79,5 +85,32 @@ public class PharmacieController {
 			 }
 		 }
 	 }
+	@GetMapping(value="/medicamentAvecBasPrix/{longitude}/{latitude}/{maxDistanceInKm}/{nomdDeMedicmaent}")
 
+	public List<MedicmentAvecBasPrixDto> medicamentAvecBasPrix(@PathVariable double longitude, @PathVariable double latitude,@PathVariable double maxDistanceInKm,@PathVariable String nomdDeMedicmaent) {
+		Point location = new Point(longitude, latitude);
+		Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
+		Circle circle = new Circle(location, maxDistance);
+		Query query = Query.query(Criteria.where("location").withinSphere(circle));
+       List<MedicmentAvecBasPrixDto> medi=new ArrayList<>();
+
+		List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
+		for(int i=0;i<nearestPharmacies.size();i++){
+			Optional<Medicament> medicament= medicamentsRepository.findByIdPharmacieAndNomMedicament(nearestPharmacies.get(i).getId_pharmacie(),nomdDeMedicmaent);
+			MedicmentAvecBasPrixDto medicmentAvecBasPrixDto=new MedicmentAvecBasPrixDto();
+			if(medicament.isPresent()){
+
+				medicmentAvecBasPrixDto.setPrix(medicament.get().getPrix());
+				medicmentAvecBasPrixDto.setIdMedicament(medicament.get().getId_medicament());
+				medicmentAvecBasPrixDto.setNomMedicament(medicament.get().getNomMedicament());
+				medicmentAvecBasPrixDto.setNomPharmacie(nearestPharmacies.get(i).getName());
+				medicmentAvecBasPrixDto.setIdPharmacie(nearestPharmacies.get(i).getId_pharmacie());
+
+			}
+			medi.add(medicmentAvecBasPrixDto);
+
+		}
+
+		return medi;
+	}
 }
