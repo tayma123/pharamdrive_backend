@@ -1,8 +1,10 @@
 package com.pharamdrive.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.pharamdrive.models.Pharmacie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,18 +44,28 @@ public class MedicamentsContoller {
         return "medicaments added successfully";
     }
 
+    //update medicament under pharmacy
+    @PostMapping(value = "/updateMedicamentUnderPharmacy}")
+    public String updatemedicamentUnderPharmacy(@RequestBody Medicament med) {
+
+        MedicamentsRepo.save(med);
+
+
+        return "medicament update successfully";
+    }
+    //delete medicament under pharmacy
+    @DeleteMapping(value = "/deleteMedicament/{id}")
+    public String deleteMedicament(@PathVariable(value = "id") String id) {
+        MedicamentsRepo.deleteById(id);
+        return "medicaments deleted successfully";
+    }
+
     //get all medicaments for a specific pharmacy
     @GetMapping("/medicaments/pharmacy/{id}")
     public List<Medicament> getAllMedicamentPharmacys(@PathVariable String id) {
         return MedicamentsRepo.findAllByIdPharmacie(id);
     }
 
-    //Api Delete medicament
-    @DeleteMapping(value = "/delete/medicament/{id}")
-    public String deleteMedicament(@PathVariable(value = "id") String id) {
-        MedicamentsRepo.deleteById(id);
-        return "le medicament a été effacée avec succes";
-    }
 
     //Api get  medicament
     @GetMapping(value = "/medicament/{id}")
