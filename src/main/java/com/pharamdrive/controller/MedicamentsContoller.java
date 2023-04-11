@@ -57,7 +57,7 @@ public class MedicamentsContoller {
     @DeleteMapping(value = "/deleteMedicament/{id}")
     public String deleteMedicament(@PathVariable(value = "id") String id) {
         MedicamentsRepo.deleteById(id);
-        return "medicaments deleted successfully";
+        return "medicament deleted successfully";
     }
 
     //get all medicaments for a specific pharmacy
