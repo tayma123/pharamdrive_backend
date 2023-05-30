@@ -19,11 +19,16 @@ public class Medicament implements Serializable{
 	@Id
 	private String id_medicament;
 	private String nomMedicament;
-	private double prix;
+	private String prix;
 	private String remise;
 	private String image="assets/icons/bio.png";
-	private String quantite;
+	private Integer quantite;
+	private String detail;
 	private String idPharmacie;
 	private String  idCategorie;
+	private String idPromotion;
+	private Integer seuil;
+	private Integer AlerteForSeuil;
+
 
 }

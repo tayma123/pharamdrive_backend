@@ -35,7 +35,7 @@ public class Pharmacie implements Serializable{
 	private Double longitude;
 	private String telephone;
 	private Point location;
-
+List<Notification> notifications;
 
 
 

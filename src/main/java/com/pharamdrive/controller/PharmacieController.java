@@ -86,20 +86,19 @@ public class PharmacieController {
 		 }
 	 }
 	@GetMapping(value="/medicamentAvecBasPrix/{longitude}/{latitude}/{maxDistanceInKm}/{nomdDeMedicmaent}")
-
 	public List<MedicmentAvecBasPrixDto> medicamentAvecBasPrix(@PathVariable double longitude, @PathVariable double latitude,@PathVariable double maxDistanceInKm,@PathVariable String nomdDeMedicmaent) {
 		Point location = new Point(longitude, latitude);
+		System.out.println("___________"+location);
 		Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
 		Circle circle = new Circle(location, maxDistance);
 		Query query = Query.query(Criteria.where("location").withinSphere(circle));
        List<MedicmentAvecBasPrixDto> medi=new ArrayList<>();
-
 		List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
+
 		for(int i=0;i<nearestPharmacies.size();i++){
 			Optional<Medicament> medicament= medicamentsRepository.findByIdPharmacieAndNomMedicament(nearestPharmacies.get(i).getId_pharmacie(),nomdDeMedicmaent);
 			MedicmentAvecBasPrixDto medicmentAvecBasPrixDto=new MedicmentAvecBasPrixDto();
 			if(medicament.isPresent()){
-
 				medicmentAvecBasPrixDto.setPrix(medicament.get().getPrix());
 				medicmentAvecBasPrixDto.setIdMedicament(medicament.get().getId_medicament());
 				medicmentAvecBasPrixDto.setNomMedicament(medicament.get().getNomMedicament());

@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.pharamdrive.models.Notification;
 import com.pharamdrive.models.Pharmacie;
+import com.pharamdrive.models.Promotion;
+import com.pharamdrive.repository.NotificationRepository;
+import com.pharamdrive.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +33,15 @@ public class MedicamentsContoller {
     public MedicamentsRepository MedicamentsRepo;
     @Autowired
     public final PharmacieRepository pharmRepo;
+    @Autowired
+    public final PromotionRepository promotionRepository;
+    @Autowired
+    public final NotificationRepository notificationRepository;
 
-    public MedicamentsContoller(PharmacieRepository pharmRepo) {
+    public MedicamentsContoller(PharmacieRepository pharmRepo, PromotionRepository promotionRepository, NotificationRepository notificationRepository) {
         this.pharmRepo = pharmRepo;
+        this.promotionRepository = promotionRepository;
+        this.notificationRepository = notificationRepository;
     }
 
 
@@ -38,7 +49,8 @@ public class MedicamentsContoller {
     @PostMapping(value = "/addMedicamentUnderPharmacy/{idPharmacy}")
     public String addmedicamentUnderPharmacy(@RequestBody Medicament med, @PathVariable String idPharmacy) {
         med.setIdPharmacie(idPharmacy);
-        MedicamentsRepo.save(med);
+       med= MedicamentsRepo.save(med);
+       System.out.println("______________________________"+med);
 
 
         return "medicaments added successfully";
@@ -87,5 +99,67 @@ public class MedicamentsContoller {
         MedicamentsRepo.save(med);
         return "medicaments added successfully";
     }
+    //add promotion to medicament
+    @PostMapping(value = "/addPromotionToMedicament/{idMedicament}")
+    public String addPromotionToMedicament(@RequestBody String promotion,@PathVariable(value = "idMedicament") String idMedicament) {
 
+        Medicament medicament=getMedicament(idMedicament).get();
+        Promotion promotion1= new Promotion();
+        promotion1.setPromotion(promotion);
+        promotion1=promotionRepository.save(promotion1);
+        medicament.setIdPromotion(promotion1.getIdPromotion());
+        MedicamentsRepo.save(medicament);
+        return "promotion added successfully";
+    }
+    //delete promotion to medicament
+    @PostMapping(value = "/deletePromotionToMedicament/{idMedicament}")
+    public String deletePromotionfromMedicament(@PathVariable(value = "idMedicament") String idMedicament) {
+        Medicament medicament=getMedicament(idMedicament).get();
+        promotionRepository.deleteById(medicament.getIdPromotion());
+        medicament.setIdPromotion(null);
+        MedicamentsRepo.save(medicament);
+        return "promotion deleted successfully";
+    }
+    @Scheduled(cron = "* * * * *")
+    public void checkQuantityBeforeAttentSeuil() {
+   List<Medicament> medicaments=getAllMedicaments();
+        for(int i=0;i<medicaments.size();i++ ){
+            if(medicaments.get(i).getSeuil()!=null &&medicaments.get(i).getQuantite()!=null &&medicaments.get(i).getAlerteForSeuil()!=null){
+            if(medicaments.get(i).getSeuil()- medicaments.get(i).getQuantite()==medicaments.get(i).getAlerteForSeuil()){
+                Pharmacie pharmacie=pharmRepo.findById(medicaments.get(i).getIdPharmacie()).get();
+                List<Notification> notifications=new ArrayList<>();
+                if(pharmacie.getNotifications()!=null){
+                    notifications=pharmacie.getNotifications();
+                }
+                Notification notification=new Notification();
+                notification.setText("Vous avez presque attenué votre seuil pour la quantité de medicament pour le   "+medicaments.get(i).getNomMedicament());
+                notification=notificationRepository.save(notification);
+                notifications.add(notification);
+                pharmacie.setNotifications(notifications);
+                pharmRepo.save(pharmacie);
+            }}
+        }
+
+    }
+    @Scheduled(cron = "* * * * *")
+    public void checkSeuil() {
+        List<Medicament> medicaments=getAllMedicaments();
+        for(int i=0;i<medicaments.size();i++ ){
+            if(medicaments.get(i).getSeuil()!=null &&medicaments.get(i).getQuantite()!=null){
+                if(medicaments.get(i).getSeuil()==medicaments.get(i).getQuantite()){
+                    Pharmacie pharmacie=pharmRepo.findById(medicaments.get(i).getIdPharmacie()).get();
+                    List<Notification> notifications=new ArrayList<>();
+                    if(pharmacie.getNotifications()!=null){
+                        notifications=pharmacie.getNotifications();
+                    }
+                    Notification notification=new Notification();
+                    notification.setText("Attention Vous avez attenué votre seuil pour la quantité de medicament pour le  "+medicaments.get(i).getNomMedicament());
+                    notification=notificationRepository.save(notification);
+                    notifications.add(notification);
+                    pharmacie.setNotifications(notifications);
+                    pharmRepo.save(pharmacie);
+                }}
+        }
+
+    }
 }
