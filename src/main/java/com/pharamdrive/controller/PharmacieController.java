@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.websocket.server.PathParam;
+import javax.xml.stream.Location;
 
 import com.pharamdrive.RessourcesDto.MedicmentAvecBasPrixDto;
 import com.pharamdrive.models.Medicament;
@@ -113,6 +114,8 @@ public class PharmacieController {
 		Pharmacie pharmacie = pharmRepo.findById(idpharmacie).get();
 		pharmacie.setLongitude(longitude);
 		pharmacie.setAltitude(altitude);
+		Point location=new Point(longitude,altitude);
+		pharmacie.setLocation(location);
 		pharmRepo.save(pharmacie);
 		return  pharmacie;
 	}
