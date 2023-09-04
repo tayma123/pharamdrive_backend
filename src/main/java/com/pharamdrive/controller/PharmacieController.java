@@ -106,6 +106,7 @@ public class PharmacieController {
 
 		return medi;
 	}
+	//
 	@PutMapping("/updateLongitudeAndAltitude/{idpharmacie}/{longitude}/{altitude}")
 	public Pharmacie updateLongitudeAndAltitude(@PathVariable String idpharmacie,@PathVariable double longitude,@PathVariable double altitude){
 
