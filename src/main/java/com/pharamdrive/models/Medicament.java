@@ -29,6 +29,7 @@ public class Medicament implements Serializable{
 	private String idPromotion;
 	private Integer seuil;
 	private Integer AlerteForSeuil;
+	private String tracabilite;
 
 
 }

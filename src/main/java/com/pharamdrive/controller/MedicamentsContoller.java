@@ -163,4 +163,12 @@ public class MedicamentsContoller {
 
         return MedicamentsRepo.findById(id).get();
     }
+    @PutMapping(value = "/addTracabiliteToMedicament/{idMedicament}")
+
+        Medicament addTracabiliteToMedicament(@PathVariable(value = "idMedicament")  String idMedicament,@RequestBody String tracabilite){
+        Medicament medicament=getMedicament(idMedicament);
+        medicament.setTracabilite(tracabilite);
+        updatemedicamentUnderPharmacy(medicament);
+        return medicament;
+    }
 }
