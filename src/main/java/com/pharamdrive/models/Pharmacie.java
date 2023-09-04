@@ -18,32 +18,27 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 
-@Document(collection="pharmacie")
-public class Pharmacie implements Serializable{
-	@Id 
-	private String id_pharmacie;
-	private String name;
-	private String representant;
-	private String email;
-	private String phone;
-	private String adresse;
-	private String password;
-	private Date heures_ouverture;
-	private Date heures_fermeture;
-	private String rue;
-	private Double altitude;
-	private Double longitude;
-	private String telephone;
-	private Point location;
-List<Notification> notifications;
+@Document(collection = "pharmacie")
+public class
+Pharmacie implements Serializable {
+    @Id
+    private String id_pharmacie;
+    private String name;
+    private String representant;
+    private String email;
+    private String phone;
+    private String adresse;
+    private String password;
+    private Date heures_ouverture;
+    private Date heures_fermeture;
+    private String rue;
+    private Double altitude;
+    private Double longitude;
+    private String telephone;
+    private Point location;
+    List<String> idClients;
+    List<Notification> notifications;
+    private boolean verified;
 
-
-
-	private boolean verified ;
-	
-
-	
-	
-	
 
 }

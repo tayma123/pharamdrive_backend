@@ -11,14 +11,7 @@ import com.pharamdrive.repository.NotificationRepository;
 import com.pharamdrive.repository.PromotionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.pharamdrive.models.Medicament;
 import com.pharamdrive.repository.MedicamentsRepository;
@@ -72,19 +65,9 @@ public class MedicamentsContoller {
         return "medicament deleted successfully";
     }
 
-    //get all medicaments for a specific pharmacy
-    @GetMapping("/medicaments/pharmacy/{id}")
-    public List<Medicament> getAllMedicamentPharmacys(@PathVariable String id) {
-        return MedicamentsRepo.findAllByIdPharmacie(id);
-    }
 
 
-    //Api get  medicament
-    @GetMapping(value = "/medicament/{id}")
-    public Optional<Medicament> getMedicament(@PathVariable(value = "id") String id) {
 
-        return MedicamentsRepo.findById(id);
-    }
 
     //get all medicaments
     @GetMapping("/medicaments")
@@ -103,7 +86,7 @@ public class MedicamentsContoller {
     @PostMapping(value = "/addPromotionToMedicament/{idMedicament}")
     public String addPromotionToMedicament(@RequestBody String promotion,@PathVariable(value = "idMedicament") String idMedicament) {
 
-        Medicament medicament=getMedicament(idMedicament).get();
+        Medicament medicament=getMedicament(idMedicament);
         Promotion promotion1= new Promotion();
         promotion1.setPromotion(promotion);
         promotion1=promotionRepository.save(promotion1);
@@ -114,7 +97,7 @@ public class MedicamentsContoller {
     //delete promotion to medicament
     @PostMapping(value = "/deletePromotionToMedicament/{idMedicament}")
     public String deletePromotionfromMedicament(@PathVariable(value = "idMedicament") String idMedicament) {
-        Medicament medicament=getMedicament(idMedicament).get();
+        Medicament medicament=getMedicament(idMedicament);
         promotionRepository.deleteById(medicament.getIdPromotion());
         medicament.setIdPromotion(null);
         MedicamentsRepo.save(medicament);
@@ -161,5 +144,23 @@ public class MedicamentsContoller {
                 }}
         }
 
+    }
+    @PutMapping(value = "/addStockToMedicament/{idMedicament}")
+
+    Medicament addStockToMedicament(@PathVariable(value = "idMedicament")  String idMedicament,@RequestBody Integer qunatite){
+        Medicament medicament=getMedicament(idMedicament);
+        medicament.setQuantite(qunatite);
+        updatemedicamentUnderPharmacy(medicament);
+        return medicament;
+    }
+    @GetMapping("/medicaments/pharmacy/{id}")
+    public List<Medicament> getAllMedicamentPharmacys(@PathVariable String id) {
+        return MedicamentsRepo.findAllByIdPharmacie(id);
+    }
+    //Api get  medicament
+    @GetMapping(value = "/medicament/{id}")
+    public Medicament getMedicament(@PathVariable(value = "id") String id) {
+
+        return MedicamentsRepo.findById(id).get();
     }
 }

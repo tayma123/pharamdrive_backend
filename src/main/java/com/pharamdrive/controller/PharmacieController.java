@@ -17,13 +17,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.pharamdrive.models.Pharmacie;
 import com.pharamdrive.models.Users;
@@ -111,5 +105,14 @@ public class PharmacieController {
 		}
 
 		return medi;
+	}
+	@PutMapping("/updateLongitudeAndAltitude/{idpharmacie}/{longitude}/{altitude}")
+	public Pharmacie updateLongitudeAndAltitude(@PathVariable String idpharmacie,@PathVariable double longitude,@PathVariable double altitude){
+
+		Pharmacie pharmacie = pharmRepo.findById(idpharmacie).get();
+		pharmacie.setLongitude(longitude);
+		pharmacie.setAltitude(altitude);
+		pharmRepo.save(pharmacie);
+		return  pharmacie;
 	}
 }
