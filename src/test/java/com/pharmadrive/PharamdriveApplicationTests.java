@@ -7,8 +7,6 @@ import org.springframework.test.context.ContextConfiguration;
 @SpringBootTest(classes = com.pharamdrive.PharamdriveApplication.class)
 class PharamdriveApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+
 
 }
