@@ -18,8 +18,8 @@ import lombok.ToString;
 @Document(collection="categories")
 public class Categories implements Serializable {
 	@Id
-	private String id_category;
-	private String category;
+	private String id;
+	private String categoryName;
 	private String file;
 	private String id_pharmacie;
 	

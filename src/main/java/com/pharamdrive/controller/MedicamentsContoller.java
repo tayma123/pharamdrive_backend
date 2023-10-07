@@ -2,20 +2,12 @@ package com.pharamdrive.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import com.pharamdrive.models.Notification;
-import com.pharamdrive.models.Pharmacie;
-import com.pharamdrive.models.Promotion;
-import com.pharamdrive.repository.NotificationRepository;
-import com.pharamdrive.repository.PromotionRepository;
+import com.pharamdrive.models.*;
+import com.pharamdrive.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-
-import com.pharamdrive.models.Medicament;
-import com.pharamdrive.repository.MedicamentsRepository;
-import com.pharamdrive.repository.PharmacieRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -27,12 +19,15 @@ public class MedicamentsContoller {
     @Autowired
     public final PharmacieRepository pharmRepo;
     @Autowired
+    private final CategoriesRepository categoriesRepository;
+    @Autowired
     public final PromotionRepository promotionRepository;
     @Autowired
     public final NotificationRepository notificationRepository;
 
-    public MedicamentsContoller(PharmacieRepository pharmRepo, PromotionRepository promotionRepository, NotificationRepository notificationRepository) {
+    public MedicamentsContoller(PharmacieRepository pharmRepo, CategoriesRepository categoriesRepository, PromotionRepository promotionRepository, NotificationRepository notificationRepository) {
         this.pharmRepo = pharmRepo;
+        this.categoriesRepository = categoriesRepository;
         this.promotionRepository = promotionRepository;
         this.notificationRepository = notificationRepository;
     }
@@ -170,5 +165,13 @@ public class MedicamentsContoller {
         medicament.setTracabilite(tracabilite);
         updatemedicamentUnderPharmacy(medicament);
         return medicament;
+    }
+    @GetMapping(value = "/getmedicamentByCategorie/{nom}")
+    public List<Medicament> getmedicamentByCategorie(@PathVariable(value = "nom") String nom) {
+        Categories categories=categoriesRepository.findByCategoryName(nom);
+        if(categories!=null){
+         return MedicamentsRepo.findAllByIdCategorie(categories.getId());
+        }
+        return new ArrayList<>();
     }
 }

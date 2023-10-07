@@ -45,7 +45,7 @@ public class CategoriesController {
 			e.printStackTrace();
 		}
 		categorie.setFile(fileName);
-		categorie.setCategory(name);
+		categorie.setCategoryName(name);
 		catRepo.save(categorie);
 		
 		return "nouvelle categorie a ete ajoutee";
@@ -56,12 +56,7 @@ public class CategoriesController {
 	public List<Categories> getAllCategories(){
 		return catRepo.findAll();
 		}
-	//get categories for a specific pharmacy
-	@GetMapping("/categories/pharmacy/{id}")
-	public List<Categories> getAllCategoriesPharmacys(@PathVariable String id) {
-		 return catRepo.findAllById_pharmacie(id);
-	
-	}
+
 	
 
 	//delete an category
