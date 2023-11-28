@@ -98,7 +98,7 @@ public class MedicamentsContoller {
         MedicamentsRepo.save(medicament);
         return "promotion deleted successfully";
     }
-    @Scheduled(cron = "* * * * *")
+    @Scheduled(cron = "* * * *  * *")
     public void checkQuantityBeforeAttentSeuil() {
    List<Medicament> medicaments=getAllMedicaments();
         for(int i=0;i<medicaments.size();i++ ){
@@ -119,7 +119,7 @@ public class MedicamentsContoller {
         }
 
     }
-    @Scheduled(cron = "* * * * *")
+    @Scheduled(cron = "* * * * * *")
     public void checkSeuil() {
         List<Medicament> medicaments=getAllMedicaments();
         for(int i=0;i<medicaments.size();i++ ){
@@ -166,12 +166,24 @@ public class MedicamentsContoller {
         updatemedicamentUnderPharmacy(medicament);
         return medicament;
     }
-    @GetMapping(value = "/getmedicamentByCategorie/{nom}")
+    @GetMapping(value = "/medicaments/categorie/{nom}")
     public List<Medicament> getmedicamentByCategorie(@PathVariable(value = "nom") String nom) {
-        Categories categories=categoriesRepository.findByCategoryName(nom);
-        if(categories!=null){
-         return MedicamentsRepo.findAllByIdCategorie(categories.getId());
-        }
-        return new ArrayList<>();
+
+         return MedicamentsRepo.findAllByNomCategorie(nom);
+
+    }
+
+    @GetMapping(value = "/medicaments/search/{mot}")
+    public List<Medicament> search(@PathVariable(value = "mot") String mot) {
+          List<Medicament> medicaments=MedicamentsRepo.findAll();
+          System.out.println("________________"+medicaments.size());
+          List<Medicament> newlist=new ArrayList<>();
+          for (int i=0;i<medicaments.size();i++){
+              if(medicaments.get(i).getNomMedicament().contains(mot)){
+                  newlist.add(medicaments.get(i));
+              }
+          }
+        return newlist;
+
     }
 }

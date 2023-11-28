@@ -21,6 +21,7 @@ public class Livreurs {
 	private String email;
 	private String phone;
 	private String  car ;
+	private  String idSocieteLivreur;
 	private String addresse;
 	private String id_pharmacie;
 	

@@ -12,7 +12,7 @@ import com.pharamdrive.models.Medicament;
 public interface MedicamentsRepository  extends MongoRepository<Medicament,String>{
 	List<Medicament> findAllByIdPharmacie(String idPharmacie);
 	Optional<Medicament> findByIdPharmacieAndNomMedicament(String idPharmacie, String nomMedicament);
-	List<Medicament> findAllByIdCategorie(String idCategorie);
+	List<Medicament> findAllByNomCategorie(String nomCategorie);
 
 	
 
