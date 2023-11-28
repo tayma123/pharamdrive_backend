@@ -98,7 +98,7 @@ public class MedicamentsContoller {
         MedicamentsRepo.save(medicament);
         return "promotion deleted successfully";
     }
-    @Scheduled(cron = "* * * *  * *")
+  //  @Scheduled(cron = "* * * *  * *")
     public void checkQuantityBeforeAttentSeuil() {
    List<Medicament> medicaments=getAllMedicaments();
         for(int i=0;i<medicaments.size();i++ ){
@@ -119,7 +119,7 @@ public class MedicamentsContoller {
         }
 
     }
-    @Scheduled(cron = "* * * * * *")
+    //@Scheduled(cron = "* * * * * *")
     public void checkSeuil() {
         List<Medicament> medicaments=getAllMedicaments();
         for(int i=0;i<medicaments.size();i++ ){

@@ -21,7 +21,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.*;
 
 import com.pharamdrive.models.Pharmacie;
-import com.pharamdrive.models.Users;
+
 import com.pharamdrive.repository.PharmacieRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
