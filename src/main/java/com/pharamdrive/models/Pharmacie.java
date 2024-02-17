@@ -39,6 +39,7 @@ Pharmacie implements Serializable {
     List<String> idClients;
     List<Notification> notifications;
     private boolean verified;
+    private String departement;
 
 
 }

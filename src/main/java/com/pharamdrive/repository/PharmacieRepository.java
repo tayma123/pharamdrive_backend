@@ -13,6 +13,7 @@ import com.pharamdrive.models.Users;
 public interface PharmacieRepository extends MongoRepository<Pharmacie, String>{
 
 	Pharmacie findByEmailAndPassword(String email, String password);
+	List<Pharmacie> findByDepartementContainingIgnoreCase(String quartier);
 
 
 }

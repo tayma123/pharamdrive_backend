@@ -3,13 +3,7 @@ package com.pharamdrive.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.pharamdrive.models.Livreurs;
 import com.pharamdrive.repository.LivreursRepository;
@@ -24,7 +18,13 @@ public class LivreursController {
 	@PostMapping(value="/add/livreur")
 	public Livreurs addLivreur(@RequestBody Livreurs livreur) {
 		return livreurRepo.save(livreur);
-		
+
+	}
+	//update livreur
+	@PutMapping(value="/update/livreur")
+	public Livreurs updateLivreur(@RequestBody Livreurs livreur) {
+		return livreurRepo.save(livreur);
+
 	}
 	//get medicaments for a specific pharmacy
 	@GetMapping("/livreurs/pharmacy/{id}")
@@ -33,7 +33,7 @@ public class LivreursController {
 	}
 	
 	// get all livreurs
-	@GetMapping(value="/livreurs")
+	@GetMapping(value="/livreurs/all")
 	public List<Livreurs> getLivreurs(){
 		return livreurRepo.findAll();
 	}

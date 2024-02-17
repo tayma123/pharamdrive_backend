@@ -51,5 +51,11 @@ public class ClientController {
         return clients;
     }
 
+    @GetMapping(value = "/clients/all")
+    public List<Client> givemeall() {
+        List<Client> clients=clientRepository.findAll();
+
+        return clients;
+    }
 
 }

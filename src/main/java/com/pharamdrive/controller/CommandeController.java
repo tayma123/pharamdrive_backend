@@ -33,6 +33,11 @@ public class CommandeController {
         return "Commande updated successfully";
     }
     //get all commandes
+    //get all commandes
+    @GetMapping("/commandes/all")
+    public List<Commande> getall() {
+        return commandeRepository.findAll();
+    }
     @GetMapping("/commandes/{id}")
     public List<Commande> getcommandes(@PathVariable(value = "id") String id) {
         return commandeRepository.getByIdPharamcie(id);

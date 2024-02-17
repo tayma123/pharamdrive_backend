@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.websocket.server.PathParam;
-import javax.xml.stream.Location;
-
 import com.pharamdrive.RessourcesDto.MedicmentAvecBasPrixDto;
 import com.pharamdrive.models.Medicament;
 import com.pharamdrive.repository.MedicamentsRepository;
@@ -28,95 +25,125 @@ import com.pharamdrive.repository.PharmacieRepository;
 @RestController
 @RequestMapping("/v1")
 public class PharmacieController {
-	@Autowired
-	public PharmacieRepository pharmRepo;
-	@Autowired
-	private MongoTemplate mongoTemplate;
-	@Autowired
-	MedicamentsRepository medicamentsRepository;
-	@PostMapping(value="/new/pharmacie")
-	public Pharmacie addPharmacie(@RequestBody Pharmacie pharam) {
-		return pharmRepo.save(pharam);
-	}
+    @Autowired
+    public PharmacieRepository pharmRepo;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    @Autowired
+    MedicamentsRepository medicamentsRepository;
 
-	 @PostMapping("/login")
-	    public Pharmacie login(@RequestBody Pharmacie pharmacie){
+    @PostMapping(value = "/new/pharmacie")
+    public Pharmacie addPharmacie(@RequestBody Pharmacie pharam) {
+        return pharmRepo.save(pharam);
+    }
 
-	        Pharmacie OldUser = pharmRepo.findByEmailAndPassword(pharmacie.getEmail(),pharmacie.getPassword());
-	        return  OldUser;
-	    }
+    @PostMapping(value = "/update/pharmacie")
+    public Pharmacie updatePharmacie(@RequestBody Pharmacie pharam) {
 
-	@GetMapping(value="/pharmacies")
-	public List<Pharmacie> getPharmacies(){
-		return pharmRepo.findAll();
-	}
+        return pharmRepo.save(pharam);
+    }
 
-	@PostMapping(value ="/pharmacie/{id}")
-	public Optional<Pharmacie> getPharmacieId(@PathVariable  String id ){
-		return  pharmRepo.findById(id);
+    @PostMapping("/login")
+    public Pharmacie login(@RequestBody Pharmacie pharmacie) {
 
-	}
-	@GetMapping(value="/near/{longitude}/{latitude}/{maxDistanceInKm}")
+        Pharmacie OldUser = pharmRepo.findByEmailAndPassword(pharmacie.getEmail(), pharmacie.getPassword());
+        return OldUser;
+    }
 
-	public List<Pharmacie> findNearestPharmacies(@PathVariable double longitude, @PathVariable double latitude,@PathVariable double maxDistanceInKm) {
-		Point location = new Point(longitude, latitude);
-		Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
-		Circle circle = new Circle(location, maxDistance);
-		Query query = Query.query(Criteria.where("location").withinSphere(circle));
+    @GetMapping(value = "/pharmacies")
+    public List<Pharmacie> getPharmacies() {
+        return pharmRepo.findAll();
+    }
 
-		List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
-		return nearestPharmacies;
-	}
+    @GetMapping(value = "/pharmacie/{id}")
+    public Optional<Pharmacie> getPharmacieId(@PathVariable String id) {
+        return pharmRepo.findById(id);
 
-	 @PostMapping(value ="/addLocationToPharmacie")
-	 public void addLocationToPharmacie( ){
-		List<Pharmacie> all=  pharmRepo.findAll();
-		 for (int i = 0; i < all.size(); i++) {
+    }
 
-			 if (all.get(i).getLongitude() != null && all.get(i).getAltitude() != null) {
-				 Point locations = new Point(all.get(i).getLongitude(), all.get(i).getAltitude());
-				 all.get(i).setLocation(locations);
-				 pharmRepo.save(all.get(i));
-			 }
-		 }
-	 }
-	@GetMapping(value="/medicamentAvecBasPrix/{longitude}/{latitude}/{maxDistanceInKm}/{nomdDeMedicmaent}")
-	public List<MedicmentAvecBasPrixDto> medicamentAvecBasPrix(@PathVariable double longitude, @PathVariable double latitude,@PathVariable double maxDistanceInKm,@PathVariable String nomdDeMedicmaent) {
-		Point location = new Point(longitude, latitude);
-		System.out.println("___________"+location);
-		Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
-		Circle circle = new Circle(location, maxDistance);
-		Query query = Query.query(Criteria.where("location").withinSphere(circle));
-       List<MedicmentAvecBasPrixDto> medi=new ArrayList<>();
-		List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
+    @GetMapping(value = "/near/{longitude}/{latitude}/{maxDistanceInKm}")
 
-		for(int i=0;i<nearestPharmacies.size();i++){
-			Optional<Medicament> medicament= medicamentsRepository.findByIdPharmacieAndNomMedicament(nearestPharmacies.get(i).getId_pharmacie(),nomdDeMedicmaent);
-			MedicmentAvecBasPrixDto medicmentAvecBasPrixDto=new MedicmentAvecBasPrixDto();
-			if(medicament.isPresent()){
-				medicmentAvecBasPrixDto.setPrix(medicament.get().getPrix());
-				medicmentAvecBasPrixDto.setIdMedicament(medicament.get().getId_medicament());
-				medicmentAvecBasPrixDto.setNomMedicament(medicament.get().getNomMedicament());
-				medicmentAvecBasPrixDto.setNomPharmacie(nearestPharmacies.get(i).getName());
-				medicmentAvecBasPrixDto.setIdPharmacie(nearestPharmacies.get(i).getId_pharmacie());
+    public List<Pharmacie> findNearestPharmacies(@PathVariable double longitude, @PathVariable double latitude, @PathVariable double maxDistanceInKm) {
+        Point location = new Point(longitude, latitude);
+        Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
+        Circle circle = new Circle(location, maxDistance);
+        Query query = Query.query(Criteria.where("location").withinSphere(circle));
 
-			}
-			medi.add(medicmentAvecBasPrixDto);
+        List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
+        return nearestPharmacies;
+    }
 
-		}
+    @PostMapping(value = "/addLocationToPharmacie")
+    public void addLocationToPharmacie() {
+        List<Pharmacie> all = pharmRepo.findAll();
+        for (int i = 0; i < all.size(); i++) {
 
-		return medi;
-	}
-	//
-	@PutMapping("/updateLongitudeAndAltitude/{idpharmacie}/{longitude}/{altitude}")
-	public Pharmacie updateLongitudeAndAltitude(@PathVariable String idpharmacie,@PathVariable double longitude,@PathVariable double altitude){
+            if (all.get(i).getLongitude() != null && all.get(i).getAltitude() != null) {
+                Point locations = new Point(all.get(i).getLongitude(), all.get(i).getAltitude());
+                all.get(i).setLocation(locations);
+                pharmRepo.save(all.get(i));
+            }
+        }
+    }
 
-		Pharmacie pharmacie = pharmRepo.findById(idpharmacie).get();
-		pharmacie.setLongitude(longitude);
-		pharmacie.setAltitude(altitude);
-		Point location=new Point(longitude,altitude);
-		pharmacie.setLocation(location);
-		pharmRepo.save(pharmacie);
-		return  pharmacie;
-	}
+    @GetMapping(value = "/medicamentAvecBasPrix/{longitude}/{latitude}/{maxDistanceInKm}/{nomdDeMedicmaent}")
+    public List<MedicmentAvecBasPrixDto> medicamentAvecBasPrix(@PathVariable double longitude, @PathVariable double latitude, @PathVariable double maxDistanceInKm, @PathVariable String nomdDeMedicmaent) {
+        Point location = new Point(longitude, latitude);
+        System.out.println("___________" + location);
+        Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
+        Circle circle = new Circle(location, maxDistance);
+        Query query = Query.query(Criteria.where("location").withinSphere(circle));
+        List<MedicmentAvecBasPrixDto> medi = new ArrayList<>();
+        List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
+
+        for (int i = 0; i < nearestPharmacies.size(); i++) {
+            Optional<Medicament> medicament = medicamentsRepository.findByIdPharmacieAndNomMedicament(nearestPharmacies.get(i).getId_pharmacie(), nomdDeMedicmaent);
+            MedicmentAvecBasPrixDto medicmentAvecBasPrixDto = new MedicmentAvecBasPrixDto();
+            if (medicament.isPresent()) {
+                medicmentAvecBasPrixDto.setPrix(medicament.get().getPrix());
+                medicmentAvecBasPrixDto.setIdMedicament(medicament.get().getId_medicament());
+                medicmentAvecBasPrixDto.setNomMedicament(medicament.get().getNomMedicament());
+                medicmentAvecBasPrixDto.setNomPharmacie(nearestPharmacies.get(i).getName());
+                medicmentAvecBasPrixDto.setIdPharmacie(nearestPharmacies.get(i).getId_pharmacie());
+
+            }
+            medi.add(medicmentAvecBasPrixDto);
+
+        }
+
+        return medi;
+    }
+
+    //
+    @PutMapping("/updateLongitudeAndAltitude/{idpharmacie}/{longitude}/{altitude}")
+    public Pharmacie updateLongitudeAndAltitude(@PathVariable String idpharmacie, @PathVariable double longitude, @PathVariable double altitude) {
+
+        Pharmacie pharmacie = pharmRepo.findById(idpharmacie).get();
+        pharmacie.setLongitude(longitude);
+        pharmacie.setAltitude(altitude);
+        Point location = new Point(longitude, altitude);
+        pharmacie.setLocation(location);
+        pharmRepo.save(pharmacie);
+        return pharmacie;
+    }
+
+    @GetMapping(value = "/pharmacie/search/{mot}")
+    public List<Pharmacie> search(@PathVariable(value = "mot") String mot) {
+        List<Pharmacie> pharmacies = pharmRepo.findAll();
+        System.out.println("________________" + pharmacies.size());
+        List<Pharmacie> newlist = new ArrayList<>();
+        for (int i = 0; i < pharmacies.size(); i++) {
+            if (pharmacies.get(i).getName().toLowerCase().contains(mot.toLowerCase())) {
+                newlist.add(pharmacies.get(i));
+            }
+        }
+        //localisation apres le bas prix
+        return newlist;
+
+    }
+
+    @GetMapping(value = "/pharmacie/quartier/{mot}")
+    public List<Pharmacie> searchbyQuartier(@PathVariable(value = "mot") String mot) {
+        return pharmRepo.findByDepartementContainingIgnoreCase(mot);
+    }
 }

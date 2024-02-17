@@ -15,4 +15,5 @@ public class MedicmentAvecBasPrixDto {
     String nomMedicament;
     String idMedicament;
     String prix;
+    String distance;
 }

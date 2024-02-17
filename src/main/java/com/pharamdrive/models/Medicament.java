@@ -27,6 +27,7 @@ public class Medicament implements Serializable{
 	private String idPharmacie;
 	private String  nomCategorie;
 	private String idPromotion;
+	private boolean enPromotion;
 	private Integer seuil;
 	private Integer AlerteForSeuil;
 	private String tracabilite;

@@ -13,6 +13,7 @@ public interface MedicamentsRepository  extends MongoRepository<Medicament,Strin
 	List<Medicament> findAllByIdPharmacie(String idPharmacie);
 	Optional<Medicament> findByIdPharmacieAndNomMedicament(String idPharmacie, String nomMedicament);
 	List<Medicament> findAllByNomCategorie(String nomCategorie);
+	List<Medicament> findAllByEnPromotion(boolean enPromotion);
 
 	
 

@@ -34,7 +34,7 @@ public class AdminController {
 	        return  OldUser;
 	    }
 	@GetMapping("/all")
-	public List<Admin> hgetAll(){
+	public List<Admin> admgetAll(){
 		return adminRepo.findAll();
 	}
 	
