@@ -33,4 +33,9 @@ public class Medicament implements Serializable{
 	private String tracabilite;
 
 
+
+
+
+
+
 }

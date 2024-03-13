@@ -1,8 +1,6 @@
 package com.pharamdrive.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.pharamdrive.RessourcesDto.MedicmentAvecBasPrixDto;
 import com.pharamdrive.models.Medicament;
@@ -105,11 +103,12 @@ public class PharmacieController {
                 medicmentAvecBasPrixDto.setNomMedicament(medicament.get().getNomMedicament());
                 medicmentAvecBasPrixDto.setNomPharmacie(nearestPharmacies.get(i).getName());
                 medicmentAvecBasPrixDto.setIdPharmacie(nearestPharmacies.get(i).getId_pharmacie());
+                medi.add(medicmentAvecBasPrixDto);
 
             }
-            medi.add(medicmentAvecBasPrixDto);
 
         }
+        Collections.sort(medi, Comparator.comparingDouble(MedicmentAvecBasPrixDto::getPrice).reversed());
 
         return medi;
     }
