@@ -15,7 +15,7 @@ public class MedicmentAvecBasPrixDto {
     String nomMedicament;
     String idMedicament;
     String prix;
-    String distance;
+    double distance;
     public double getPrice() {
         return Double.parseDouble(this.prix);
     }

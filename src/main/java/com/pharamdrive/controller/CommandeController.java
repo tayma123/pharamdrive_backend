@@ -6,6 +6,7 @@ import com.pharamdrive.repository.CommandeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -21,6 +22,7 @@ public class CommandeController {
     //add Commande
     @PostMapping(value = "/addCommande")
     public String addCommande(@RequestBody Commande commande) {
+    commande.setDateDeConfirmation(LocalDateTime.now());
 
         commandeRepository.save(commande);
         return "Commande added successfully";
@@ -41,5 +43,13 @@ public class CommandeController {
     @GetMapping("/commandes/{id}")
     public List<Commande> getcommandes(@PathVariable(value = "id") String id) {
         return commandeRepository.getByIdPharamcie(id);
+    }
+    //delete Commande
+    @PutMapping(value = "/deleteCommande/{idc}")
+    public String deleteCommande(@PathVariable String idc) {
+        Commande commande =commandeRepository.findById(idc).get();
+        commandeRepository.save(commande);
+        commande.setActive(false);
+        return "Commande deleted successfully";
     }
 }

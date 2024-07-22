@@ -1,5 +1,6 @@
 package com.pharamdrive.controller;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 
 import com.pharamdrive.RessourcesDto.MedicmentAvecBasPrixDto;
@@ -87,15 +88,15 @@ public class PharmacieController {
     @GetMapping(value = "/medicamentAvecBasPrix/{longitude}/{latitude}/{maxDistanceInKm}/{nomdDeMedicmaent}")
     public List<MedicmentAvecBasPrixDto> medicamentAvecBasPrix(@PathVariable double longitude, @PathVariable double latitude, @PathVariable double maxDistanceInKm, @PathVariable String nomdDeMedicmaent) {
         Point location = new Point(longitude, latitude);
-        System.out.println("___________" + location);
         Distance maxDistance = new Distance(maxDistanceInKm, Metrics.KILOMETERS);
         Circle circle = new Circle(location, maxDistance);
         Query query = Query.query(Criteria.where("location").withinSphere(circle));
         List<MedicmentAvecBasPrixDto> medi = new ArrayList<>();
         List<Pharmacie> nearestPharmacies = mongoTemplate.find(query, Pharmacie.class);
-
         for (int i = 0; i < nearestPharmacies.size(); i++) {
+            double distance =   calculateDistance(latitude,longitude,nearestPharmacies.get(i).getAltitude(),nearestPharmacies.get(i).getLongitude());
             Optional<Medicament> medicament = medicamentsRepository.findByIdPharmacieAndNomMedicament(nearestPharmacies.get(i).getId_pharmacie(), nomdDeMedicmaent);
+
             MedicmentAvecBasPrixDto medicmentAvecBasPrixDto = new MedicmentAvecBasPrixDto();
             if (medicament.isPresent()) {
                 medicmentAvecBasPrixDto.setPrix(medicament.get().getPrix());
@@ -103,14 +104,28 @@ public class PharmacieController {
                 medicmentAvecBasPrixDto.setNomMedicament(medicament.get().getNomMedicament());
                 medicmentAvecBasPrixDto.setNomPharmacie(nearestPharmacies.get(i).getName());
                 medicmentAvecBasPrixDto.setIdPharmacie(nearestPharmacies.get(i).getId_pharmacie());
+                medicmentAvecBasPrixDto.setDistance(distance);
                 medi.add(medicmentAvecBasPrixDto);
 
             }
 
         }
-        Collections.sort(medi, Comparator.comparingDouble(MedicmentAvecBasPrixDto::getPrice).reversed());
+        Collections.sort(medi, Comparator.comparingDouble(MedicmentAvecBasPrixDto::getPrice));
 
         return medi;
+    }
+
+    double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double lat1Rad = Math.toRadians(lat1);
+        double lat2Rad = Math.toRadians(lat2);
+        double lon1Rad = Math.toRadians(lon1);
+        double lon2Rad = Math.toRadians(lon2);
+
+        double x = (lon2Rad - lon1Rad) * Math.cos((lat1Rad + lat2Rad) / 2);
+        double y = (lat2Rad - lat1Rad);
+        double distance = Math.sqrt(x * x + y * y) * 6371000;
+
+        return distance;
     }
 
     //
@@ -136,7 +151,6 @@ public class PharmacieController {
                 newlist.add(pharmacies.get(i));
             }
         }
-        //localisation apres le bas prix
         return newlist;
 
     }

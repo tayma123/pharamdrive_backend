@@ -8,13 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 
-@Document(collection="livreurs")
-public class Livreurs {
+@Document(collection="livreur")
+public class Livreur {
 	@Id
 	private String id_livreur;
 	private String name;
@@ -23,7 +25,7 @@ public class Livreurs {
 	private String  car ;
 	private  String idSocieteLivreur;
 	private String addresse;
-	private String id_pharmacie;
+	private List<String> id_pharmacie;
 	
 
 }
