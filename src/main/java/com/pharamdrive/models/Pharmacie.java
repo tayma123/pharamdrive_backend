@@ -40,6 +40,8 @@ Pharmacie implements Serializable {
     List<Notification> notifications;
     private boolean verified;
     private String departement;
-
+    private boolean enGarde=false;
+    //pour dire de quel jour a quel jour elle est ouverte cette pharmacie
+    private String note;
 
 }

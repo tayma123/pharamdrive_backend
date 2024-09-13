@@ -96,7 +96,6 @@ public class PharmacieController {
         for (int i = 0; i < nearestPharmacies.size(); i++) {
             double distance =   calculateDistance(latitude,longitude,nearestPharmacies.get(i).getAltitude(),nearestPharmacies.get(i).getLongitude());
             Optional<Medicament> medicament = medicamentsRepository.findByIdPharmacieAndNomMedicament(nearestPharmacies.get(i).getId_pharmacie(), nomdDeMedicmaent);
-
             MedicmentAvecBasPrixDto medicmentAvecBasPrixDto = new MedicmentAvecBasPrixDto();
             if (medicament.isPresent()) {
                 medicmentAvecBasPrixDto.setPrix(medicament.get().getPrix());
