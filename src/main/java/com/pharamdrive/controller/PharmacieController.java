@@ -158,4 +158,48 @@ public class PharmacieController {
     public List<Pharmacie> searchbyQuartier(@PathVariable(value = "mot") String mot) {
         return pharmRepo.findByDepartementContainingIgnoreCase(mot);
     }
+    @GetMapping(value = "/pharmacie/zipCode/{zipCode}")
+    public List<Pharmacie> searchbyZipCode(@PathVariable(value = "zipCode") String zipCode) {
+
+        List<Pharmacie> pharmacies = pharmRepo.findAll();
+        List<Pharmacie> pharmaciesfilter = new ArrayList<>();
+        for (int i = 0; i < pharmacies.size(); i++) {
+            if(pharmacies.get(i).getZipCode().startsWith(zipCode)){
+                pharmaciesfilter.add(pharmacies.get(i));
+            }
+
+        }
+     return pharmaciesfilter;
+    }
+
+    @GetMapping(value = "/correctifZipCode")
+    public void correctifZipCode() {
+        List<Pharmacie> pharmacies=pharmRepo.findAll();
+        for(int i=0;i<pharmacies.size();i++){
+            pharmacies.get(i).setZipCode(pharmacies.get(i).getAdresse().substring(0,5));
+            pharmRepo.save(pharmacies.get(i));
+        }
+
+    }
+    @GetMapping(value = "/correctifName")
+    public void correctifVilleName() {
+        List<Pharmacie> pharmacies=pharmRepo.findAll();
+        for(int i=0;i<pharmacies.size();i++){
+            pharmacies.get(i).setVilleName(pharmacies.get(i).getAdresse().substring(6,pharmacies.get(i).getAdresse().length()));
+            pharmRepo.save(pharmacies.get(i));
+        }
+    }
+    @GetMapping(value = "/suggestedList/{mot}")
+    public List<String> getSuggestedList(@PathVariable(value = "mot") String mot) {
+        List<Pharmacie> pharmacies=pharmRepo.findAll();
+        List<String> addresses=new ArrayList<>();
+        for(int i=0;i<pharmacies.size();i++){
+            if(pharmacies.get(i).getAdresse().startsWith(mot)){
+                addresses.add(pharmacies.get(i).getAdresse());
+            }
+
+        }
+        return addresses;
+    }
+
 }

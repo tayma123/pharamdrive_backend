@@ -21,6 +21,7 @@ import lombok.ToString;
 @Document(collection = "pharmacie")
 public class
 Pharmacie implements Serializable {
+
     @Id
     private String id_pharmacie;
     private String name;
@@ -28,6 +29,8 @@ Pharmacie implements Serializable {
     private String email;
     private String phone;
     private String adresse;
+    private String zipCode;
+    private String villeName;
     private String password;
     private Date heures_ouverture;
     private Date heures_fermeture;
