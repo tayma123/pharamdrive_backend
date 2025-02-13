@@ -170,6 +170,9 @@ public class PharmacieController {
 
         }
      return pharmaciesfilter;
+    }    @GetMapping(value = "/pharmacie/adresse/{adresse}")
+    public List<Pharmacie> searchbyAdresse(@PathVariable(value = "adresse") String adresse) {
+        return pharmRepo.findByAdresseContainingIgnoreCase(adresse);
     }
 
     @GetMapping(value = "/correctifZipCode")
@@ -201,5 +204,100 @@ public class PharmacieController {
         }
         return addresses;
     }
+    @GetMapping(value = "/pharmacWithLessPrice/{noun}/{max}/{min}/{altitude}/{longitude}/{maxDist}")
+    public List<Medicament> getMedicamentWithLessPrice(@PathVariable(value = "noun") String noun,@PathVariable(value = "max") Double max,@PathVariable(value = "min") Double min,@PathVariable(value = "altitude") Double altitude,@PathVariable(value = "longitude") Double longitude,@PathVariable(value = "maxDist") Double maxDist) {
+        List<Pharmacie> allpharmacies = findNearestPharmacies(longitude,altitude,maxDist);
+        List<Medicament> allMedicaments =new ArrayList<>();
+        for(int i=0;i<allpharmacies.size();i++){
+            allMedicaments.addAll(medicamentsRepository.findAllByIdPharmacie(allpharmacies.get(i).getId_pharmacie())); // Une liste de tous les médicaments
+        }
+        System.out.println("_______________"+allMedicaments.size());
+        List<Medicament> medicamentsFiltered = new ArrayList<>();
 
+        // Parcourir tous les médicaments pour vérifier leur prix
+        for (Medicament medicament : allMedicaments) {
+            if(medicament.getNomMedicament().equals(noun)){
+            String price = medicament.getPrix();
+
+            price=price.substring(0,price.length()-1);
+            if(!price.isEmpty()){
+            double priceDouble=Double.parseDouble(price);
+
+            System.out.println("_______________"+priceDouble+"_______________");
+
+            // Vérifier si le prix du médicament est dans la plage spécifiée
+            if ((priceDouble >= min) && (priceDouble <= max)) {
+                System.out.println("_______________"+medicament);
+                medicamentsFiltered.add(medicament);
+            }}
+        }}
+        return medicamentsFiltered;
+    }
+//    @GetMapping(value = "/pharmacWithLessPrice/{max}/{min}")
+//    public List<Medicament> getPharmacWithLessPrice(@PathVariable(value = "max") Double max,@PathVariable(value = "min") Double min) {
+//        List<Medicament> allMedicaments = medicamentsRepository.findAll(); // Une liste de tous les médicaments
+//        System.out.println("_______________"+allMedicaments.size());
+//        List<Medicament> medicamentsFiltered = new ArrayList<>();
+//
+//        // Parcourir tous les médicaments pour vérifier leur prix
+//        for (Medicament medicament : allMedicaments) {
+//            String price = medicament.getPrix();
+//
+//            price=price.substring(0,price.length()-1);
+//            double priceDouble=Double.parseDouble(price);
+//
+//            System.out.println("_______________"+priceDouble+"_______________");
+//
+//            // Vérifier si le prix du médicament est dans la plage spécifiée
+//            if ((priceDouble >= min) && (priceDouble <= max)) {
+//                System.out.println("_______________"+medicament);
+//                medicamentsFiltered.add(medicament);
+//            }
+//        }
+//        return medicamentsFiltered;
+//    }
+// Fonction utilitaire pour déterminer si un input est un code postal
+private boolean isZipCode(String input) {
+    return input.matches("\\d+");
+}
+
+    // Fonction pour valider l'adresse ou la ville
+    private boolean isAddressOrCity(String input) {
+        if (!isZipCode(input) &&((input.matches("[a-zA-Z]+")||input.matches("[a-zA-Z0-9]+")) )){
+            return true;
+
+        }
+        else
+            return false;
+
+    }
+
+    // Recherche par un critère (zipCode, adresse, ou ville)
+    @GetMapping("/find/{mot}")
+    public List<Pharmacie> searchPharmacies(@PathVariable(name = "mot") String mot) {
+        if (isZipCode(mot)) {
+
+            List<Pharmacie> pharmacies = pharmRepo.findAll();
+            List<Pharmacie> pharmaciesfilter = new ArrayList<>();
+            for (int i = 0; i < pharmacies.size(); i++) {
+                if(pharmacies.get(i).getZipCode().startsWith(mot)) {
+                     pharmaciesfilter.add(pharmacies.get(i));
+                }}
+            return pharmaciesfilter;// Recherche par code postal
+        } else  {
+            // Recherche par adresse ou ville
+            List<Pharmacie> pharmaciesByAdresse = pharmRepo.findByAdresseContainingIgnoreCase(mot);
+            List<Pharmacie> pharmaciesByVille = pharmRepo.findByVilleNameContainingIgnoreCase(mot);
+            System.out.println("______________________"+pharmaciesByVille.size());
+            if(pharmaciesByAdresse!=null){
+                pharmaciesByAdresse.addAll(pharmaciesByVille);}
+            else {
+                pharmaciesByAdresse=new ArrayList<>();
+                pharmaciesByAdresse.addAll(pharmaciesByVille);}
+
+            // Optionnellement, éliminer les doublons
+            System.out.println("______________________"+pharmaciesByAdresse);
+            return pharmaciesByAdresse.stream().distinct().toList();
+        } 
+    }
 }

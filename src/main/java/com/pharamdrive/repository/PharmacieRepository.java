@@ -15,6 +15,10 @@ public interface PharmacieRepository extends MongoRepository<Pharmacie, String>{
 	Pharmacie findByEmailAndPassword(String email, String password);
 	List<Pharmacie> findByDepartementContainingIgnoreCase(String quartier);
 	List<Pharmacie> findByZipCode(String zipCode);
+	List<Pharmacie> findByAdresseContainingIgnoreCase(String adresse);
 
 
+	List<Pharmacie> findByZipCodeContaining(String query);
+
+	List<Pharmacie> findByVilleNameContainingIgnoreCase(String query);
 }
