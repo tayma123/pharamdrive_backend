@@ -14,11 +14,11 @@ public class Commande {
     String id;
     String idPharamcie;
     Client client;
-    Etat etat;
-    Livreur livreur;
-    String montantApaye;
-    LocalDateTime dateDeConfirmation;
-    LocalDateTime dateDeLivraison;
-    List<Medicament> lesAchats;
+    State state;
+    deliveryPerson deliveryPerson;
+    String amountPay;
+    LocalDateTime ConfirmationDate;
+    LocalDateTime deliveryDate;
+    List<Medicament> Purchasing;
     boolean active=true;
 }

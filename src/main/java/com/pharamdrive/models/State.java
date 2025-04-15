@@ -1,5 +1,5 @@
 package com.pharamdrive.models;
 
-public enum Etat {
+public enum State {
     EnPreparartion,EnCoursLivraison,Livraison
 }

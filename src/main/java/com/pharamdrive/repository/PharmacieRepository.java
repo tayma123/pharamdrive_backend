@@ -8,7 +8,6 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.pharamdrive.models.Pharmacie;
-import com.pharamdrive.models.Users;
 
 public interface PharmacieRepository extends MongoRepository<Pharmacie, String>{
 

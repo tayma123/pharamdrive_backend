@@ -22,7 +22,7 @@ public class CommandeController {
     //add Commande
     @PostMapping(value = "/addCommande")
     public String addCommande(@RequestBody Commande commande) {
-    commande.setDateDeConfirmation(LocalDateTime.now());
+    commande.setConfirmationDate(LocalDateTime.now());
 
         commandeRepository.save(commande);
         return "Commande added successfully";

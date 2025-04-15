@@ -16,7 +16,7 @@ import java.util.List;
 @ToString
 
 @Document(collection="livreur")
-public class Livreur {
+public class deliveryPerson {
 	@Id
 	private String id_livreur;
 	private String name;
@@ -24,8 +24,8 @@ public class Livreur {
 	private String phone;
 	private String  car ;
 	private  String idSocieteLivreur;
-	private String addresse;
-	private List<String> id_pharmacie;
+	private String address;
+	private List<String> id_collabs;
 	
 
 }

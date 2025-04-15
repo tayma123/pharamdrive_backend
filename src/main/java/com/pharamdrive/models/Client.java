@@ -9,7 +9,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Client {
     @Id
     String id;
-    String matricule;
-    String nom_complet;
+    String name;
+    Boolean withFamily;
+    String civilStatus;
+    String phoneNumber;
+    String address;
+    //matricule cnss ou mutuelle
+    String registrationNumberCNSS;
+    String registrationNumberMutual;
+    //identification card cin
+    String email;
+    //famille detaillee
 
 }
